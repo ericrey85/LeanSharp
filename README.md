@@ -1,4 +1,6 @@
 # LeanSharp
+
+# About
 LeanSharp allows you to write code in a more declarative and functional way in C#.
 
 By using LeanSharp, a lot of boilerplate and imperative code can be removed from your codebase.
