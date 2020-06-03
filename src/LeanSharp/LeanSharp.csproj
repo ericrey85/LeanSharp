@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PackageId>LeanSharp</PackageId>
+    <Authors>Eric Rey</Authors>
+    <RepositoryUrl>https://github.com/ericrey85/LeanSharp</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>FunctionalCSharp DeclarativeCSharp FunctionalProgramming</PackageTags>
+  </PropertyGroup>
+
+</Project>
