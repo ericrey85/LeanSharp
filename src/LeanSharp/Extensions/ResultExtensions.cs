@@ -147,9 +147,7 @@ namespace LeanSharp.Extensions
         }
 
         public static async Task<Result<TSuccessNew, TFailure>> IfElseBindAsync<TSuccess, TFailure, TSuccessNew>(
-            this Result<TSuccess, TFailure> result,
-            Func<TSuccess, bool> predicate,
-            Func<TSuccess, Task<Result<TSuccessNew, TFailure>>> @if,
+            this Result<TSuccess, TFailure> result, Func<TSuccess, bool> predicate, Func<TSuccess, Task<Result<TSuccessNew, TFailure>>> @if,
             Func<TSuccess, Task<Result<TSuccessNew, TFailure>>> @else)
         {
             if (result.IsFailure)
@@ -163,8 +161,7 @@ namespace LeanSharp.Extensions
         }
 
         public static Result<TSuccess, TFailure> Tee<TSuccess, TFailure>(
-            this Result<TSuccess, TFailure> result,
-            Action<TSuccess> f)
+            this Result<TSuccess, TFailure> result, Action<TSuccess> f)
         {
             if (result.IsSuccess)
             {
@@ -175,8 +172,7 @@ namespace LeanSharp.Extensions
         }
 
         public static Result<TSuccess, TFailure> TeeIfFailure<TSuccess, TFailure>(
-            this Result<TSuccess, TFailure> result,
-            Action<TFailure> f)
+            this Result<TSuccess, TFailure> result, Action<TFailure> f)
         {
             if (result.IsFailure)
             {
@@ -186,68 +182,20 @@ namespace LeanSharp.Extensions
             return result;
         }
 
+        public static async Task<Result<TSuccess, TFailure>> TeeIfFailureAsync<TSuccess, TFailure>(
+            this Result<TSuccess, TFailure> result, Func<TFailure, Task> f)
+        {
+            if (result.IsFailure)
+            {
+                await f(result.Failure);
+            }
+
+            return result;
+        }
+
         public static Result<TSuccess3, TFailure> SelectMany<TSuccess, TFailure, TSuccess2, TSuccess3>(
-            this Result<TSuccess, TFailure> result,
-            Func<TSuccess, Result<TSuccess2, TFailure>> fn,
-            Func<TSuccess, TSuccess2, TSuccess3> select)
-                => result.Bind(a => fn(a).Map(b => select(a, b)));
-
-        public static Result<TSuccessNew, Exception> Try<TSuccess, TSuccessNew, TFailure>(
-            this Result<TSuccess, TFailure> result,
-            Func<TSuccess, Result<TSuccessNew, Exception>> tryFn)
-        {
-            try
-            {
-                return tryFn(result.Success);
-            }
-            catch (Exception ex)
-            {
-                return Result<TSuccessNew, Exception>.Failed(ex);
-            }
-        }
-
-        public static Result<TSuccessNew, Exception> Try<TSuccess, TSuccessNew, TFailure>(
-            this Result<TSuccess, TFailure> result,
-            Func<TSuccess, TSuccessNew> tryFn)
-        {
-            try
-            {
-                return Result<TSuccessNew, Exception>.Succeeded(tryFn(result.Success));
-            }
-            catch (Exception ex)
-            {
-                return Result<TSuccessNew, Exception>.Failed(ex);
-            }
-        }
-
-        public static Result<bool, Exception> Try<TSuccess, TFailure>(
-            this Result<TSuccess, TFailure> result,
-            Action<TSuccess> tryFn)
-        {
-            try
-            {
-                tryFn(result.Success);
-
-                return Result<bool, Exception>.Succeeded(true);
-            }
-            catch (Exception ex)
-            {
-                return Result<bool, Exception>.Failed(ex);
-            }
-        }
-
-        public static async Task<Result<TSuccessNew, Exception>> TryAsync<TSuccess, TSuccessNew, TFailure>(
-            this Result<TSuccess, TFailure> result,
-            Func<TSuccess, Task<Result<TSuccessNew, Exception>>> tryFn)
-        {
-            try
-            {
-                return await tryFn(result.Success);
-            }
-            catch (Exception ex)
-            {
-                return await Task.FromResult(Result<TSuccessNew, Exception>.Failed(ex));
-            }
-        }
+            this Result<TSuccess, TFailure> result, Func<TSuccess, Result<TSuccess2, TFailure>> fn,
+                 Func<TSuccess, TSuccess2, TSuccess3> select)
+        => result.Bind(a => fn(a).Map(b => select(a, b)));
     }
 }
