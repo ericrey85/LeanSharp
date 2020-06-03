@@ -8,7 +8,7 @@ To understand how each Class/Method works, take a look at the unit tests, which 
 
 One of the things provided by this project is the potential to use Railway-Oriented Programming (ROP) in C#. The code related to ROP was initially taken from https://github.com/habaneroofdoom/AltNetRop and then based on real world usage it was grown and tweaked to its current state. In the same way, the Maybe monad used in here was taken from https://gist.github.com/johnazariah/d95c03e2c56579c11272a647bab4bc38, feel free to navigate there to see a good explanation about it.
 
-<h2>Getting Started</h2>
+## Getting Started
 Install LeanSharp Nuget Package:
 
 ```shell
@@ -129,6 +129,7 @@ var billModel = GetCustomerById(id)
 Composing a pipeline with a method.
 ```csharp
 int AddFour(int number) => number + 4;
+
 var pipeline = CreatePipeLine.With(() => 5).Select(AddFour);
 var task = pipeline.Flatten(); // Task(9)
 ```
@@ -136,6 +137,7 @@ Composing a pipeline with another pipeline:
 ```csharp
 var initialPipeline = CreatePipeLine.With(() => 5);
 var resultingPipeline = initialPipeline.SelectMany(five => CreatePipeLine.With(() => five + 4));
+
 var task = resultingPipeline.Flatten(); // Task(9)
 ```
 Hello Monadic Composition again!
