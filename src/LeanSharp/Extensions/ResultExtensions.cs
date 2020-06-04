@@ -193,6 +193,11 @@ namespace LeanSharp.Extensions
             return result;
         }
 
+        public static Result<TSuccess, string> MapToStringFailure<TSuccess>(this Result<TSuccess, Exception> result)
+        => result.Either(
+             r => Result<TSuccess, string>.Succeeded(r.Success),
+             e => Result<TSuccess, string>.Failed(e.Failure.Message));
+
         public static Result<TSuccess3, TFailure> SelectMany<TSuccess, TFailure, TSuccess2, TSuccess3>(
             this Result<TSuccess, TFailure> result, Func<TSuccess, Result<TSuccess2, TFailure>> fn,
                  Func<TSuccess, TSuccess2, TSuccess3> select)

@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 
 namespace LeanSharp
 {
-    public class AsyncLazyPipeline<TSource>
+    public class Pipeline<TSource>
     {
         private Func<Task<TSource>> Expression { get; }
 
-        public AsyncLazyPipeline(Func<Task<TSource>> expression)
+        public Pipeline(Func<Task<TSource>> expression)
         {
             Expression = expression;
         }
 
         public Task<TSource> Flatten() => Expression();
 
-        public AsyncLazyPipeline<TDestination> Select<TDestination>(Func<TSource, Task<TDestination>> fn)
+        public Pipeline<TDestination> Select<TDestination>(Func<TSource, Task<TDestination>> fn)
         {
             async Task<TDestination> CombineExpressions()
             {
@@ -26,7 +26,7 @@ namespace LeanSharp
             return CreatePipeLine.With(CombineExpressions);
         }
 
-        public AsyncLazyPipeline<TDestination> Select<TDestination>(Func<TSource, TDestination> fn)
+        public Pipeline<TDestination> Select<TDestination>(Func<TSource, TDestination> fn)
         {
             async Task<TDestination> CombineExpressions()
             {
@@ -37,7 +37,7 @@ namespace LeanSharp
             return CreatePipeLine.With(CombineExpressions);
         }
 
-        public AsyncLazyPipeline<TDestination> SelectMany<TDestination>(Func<TSource, AsyncLazyPipeline<TDestination>> fn)
+        public Pipeline<TDestination> SelectMany<TDestination>(Func<TSource, Pipeline<TDestination>> fn)
         {
             async Task<TDestination> CombineExpressions()
             {
@@ -48,20 +48,20 @@ namespace LeanSharp
             return CreatePipeLine.With(CombineExpressions);
         }
 
-        public AsyncLazyPipeline<TDestination> SelectMany<TIntermediate, TDestination>(
-                Func<TSource, AsyncLazyPipeline<TIntermediate>> fn, Func<TSource, TIntermediate, TDestination> select)
+        public Pipeline<TDestination> SelectMany<TIntermediate, TDestination>(
+                Func<TSource, Pipeline<TIntermediate>> fn, Func<TSource, TIntermediate, TDestination> select)
         => SelectMany(a => fn(a).Select(b => select(a, b)));
     }
 
     public static class CreatePipeLine
     {
-        public static AsyncLazyPipeline<TDestination> With<TDestination>(Func<Task<TDestination>> fn)
-        => new AsyncLazyPipeline<TDestination>(fn);
+        public static Pipeline<TDestination> With<TDestination>(Func<Task<TDestination>> fn)
+        => new Pipeline<TDestination>(fn);
 
-        public static AsyncLazyPipeline<TDestination> With<TDestination>(Func<TDestination> fn)
-        => new AsyncLazyPipeline<TDestination>(() => fn().AsTask());
+        public static Pipeline<TDestination> With<TDestination>(Func<TDestination> fn)
+        => new Pipeline<TDestination>(() => fn().AsTask());
 
-        public static AsyncLazyPipeline<TDestination> Return<TDestination>(TDestination value)
-        => new AsyncLazyPipeline<TDestination>(() => value.AsTask());
+        public static Pipeline<TDestination> Return<TDestination>(TDestination value)
+        => new Pipeline<TDestination>(() => value.AsTask());
     }
 }

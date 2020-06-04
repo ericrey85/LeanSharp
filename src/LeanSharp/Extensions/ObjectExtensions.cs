@@ -10,6 +10,9 @@ namespace LeanSharp.Extensions
         public static TDestination MapTo<TSource, TDestination>(this TSource @this, Func<TSource, TDestination> map)
         => map(@this);
 
+        public static async Task<TDestination> MapToAsync<TSource, TDestination>(this TSource @this, Func<TSource, Task<TDestination>> map)
+        => await map(@this);
+
         public static TDestination MapToOrDefaultTo<TSource, TDestination>(
             this TSource @this, Func<TSource, TDestination> map, TDestination defaultValue)
         => @this != null ? map(@this) : defaultValue;

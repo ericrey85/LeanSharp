@@ -1,10 +1,11 @@
 ﻿using LeanSharp.Extensions;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace LeanSharp.Tests
 {
-    public class AsyncLazyPipelineTests
+    public class PipelineTests
     {
         [Fact]
         public async Task Flatten_ReturnsATask()
@@ -73,6 +74,6 @@ namespace LeanSharp.Tests
             var task = pipeline.Flatten();
 
             Assert.Equal(5, await task);
-        }
+        }             
     }
 }
