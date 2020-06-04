@@ -124,26 +124,26 @@ var billModel = GetCustomerById(id)
                       ...
                   });
 ```
-### AsyncLazyPipeline (Composable pipelines):
+### Pipeline (Composable pipelines):
 Composing a pipeline with a method.
 ```csharp
 int AddFour(int number) => number + 4;
 
-var pipeline = CreatePipeLine.With(() => 5).Select(AddFour);
+var pipeline = CreatePipeline.With(() => 5).Select(AddFour);
 var task = pipeline.Flatten(); // Task(9)
 ```
 Composing a pipeline with another pipeline:
 ```csharp
-var initialPipeline = CreatePipeLine.With(() => 5);
-var resultingPipeline = initialPipeline.SelectMany(five => CreatePipeLine.With(() => five + 4));
+var initialPipeline = CreatePipeline.With(() => 5);
+var resultingPipeline = initialPipeline.SelectMany(five => CreatePipeline.With(() => five + 4));
 
 var task = resultingPipeline.Flatten(); // Task(9)
 ```
 Hello Monadic Composition again!
 ```csharp
-var firstPipeline = CreatePipeLine.With(() => 5);
-var secondPipeline = CreatePipeLine.With(() => 6);
-var thirdPipeline = CreatePipeLine.With(() => 9);
+var firstPipeline = CreatePipeline.With(() => 5);
+var secondPipeline = CreatePipeline.With(() => 6);
+var thirdPipeline = CreatePipeline.With(() => 9);
 
 var resultingPipeline = from firstValue in firstPipeline
                         from secondValue in secondPipeline
@@ -153,5 +153,40 @@ var resultingPipeline = from firstValue in firstPipeline
 var task = resultingPipeline.Flatten();  // Task(20)
 ```
 To see a more real-world example using pipelines, you can check https://gist.github.com/ericrey85/da9671a22234ef981e5ee3653face4af.
+
+## SafePipeline(Composable exception-free pipelines)
+After a year writing ROP almost everyday, the evident downside that I found was a lot of consecutive await(s), in order to await all the chained tasks. In order to save developers from this, Pipeline was created, but then if I wanted to do ROP and at the same time use Pipeline, I needed to deal with two Monads at the same time (Pipeline and Result). After seeing how many times I ended up with something like Pipeline<Result<TSuccess, TFailure>> to create a Pipeline that was exception-free, I decided to create SafePipeline. SafePipeline is also a Monad Transformer, it gives you a pipeline that encapsulates ROP for you, and knows how to act depending of the underlying value being a success or a failure.
+```csharp
+async Task<Result<int, string>> GetFirstValue(int number) => await Result<int, string>.Succeeded(number + 4).AsTask();
+async Task<Result<int, string>> GetSecondValue(int number) => await Result<int, string>.Succeeded(number + 5).AsTask();
+async Task<int> GetThirdValue(int number) => await (number + 4).AsTask();
+int GetFourthValue(int number) => number + 5;
+
+SafePipeline<int, Exception> GetFithValue(int number) => CreateSafePipeline.TryWith(() => number + 6);
+
+var firstPipe = CreateSafePipeline.With(() => GetFirstValue(5));
+var secondPipe = firstPipe.Select(GetSecondValue);
+var thirdPipe = secondPipe.Select(GetThirdValue);
+var fourthPipe = secondPipe.Select(GetFourthValue);
+var fithPipe = fourthPipe.SelectMany(value => GetFithValue(value).ToStringFailure());
+
+var finalPipe = from firstValue in secondPipe
+                from secondValue in thirdPipe
+                from thirdValue in fithPipe
+                select firstValue + secondValue + thirdValue;
+
+var result = await finalPipe.Flatten(); // Success (57)
+```
+Operations that throw exceptions are safe to use now, and if an exception occurs, it is wrapped in a failed Result.
+```csharp
+int InvalidDivideByZeroOperation(int number) => number / 0;
+async Task<int> GetValue(int number) => await (number + 4).AsTask();
+
+var firstPipe = CreateSafePipeline.TryWith(() => InvalidDivideByZeroOperation(5));
+var finalPipe = firstPipe.Select(GetValue);
+
+var result = await finalPipe.Flatten(); // Failure (exception)
+```
+One thing to notice is that SafePipeline is pure and deterministic, it does not matter how many times you call it, as long as you pass the same parameters, you will get the same response (huge benefit in software development), and exceptions will not spoil that.
 
 There are a lot of things that you can do with LeanSharp, hopefully these examples give you an idea of how to get started.
