@@ -36,7 +36,7 @@ Result<int, string>.Succeeded(2)
 ROP is a functional approach to handling errors. The Result class is more commonly known as the Either Monad, which could be either a Right (success) or a Left (error). This allows us to get rid of Exceptions side-effect:
 
 ```csharp
-public async Result<Task<Customer>, Exception> Insert(Customer customer)
+public async Task<Result<Customer, Exception>> Insert(Customer customer)
 {
   try
   {
@@ -52,13 +52,13 @@ public async Result<Task<Customer>, Exception> Insert(Customer customer)
 ```
 You can take it even further and convert the try/catch statement to an expression, in which the boilerplate catch logic will be removed:
 ```csharp
-public async Result<Task<Customer>, Exception> Insert(Customer customer)
-=> await Try.ExpressionAsync(async () => 
-  {
-      // Try to insert Customer into the DB.
-      // ....
-      return Result<Customer, Exception>.Succeeded(customer);
-  });
+public async Task<Result<int, Exception>> Insert(Customer customer)
+=> await Try.ExpressionAsync(async () =>
+{
+  // Try to asynchronously insert the Customer into the DB.
+  // ....
+  return customer;
+});
 ```
 After getting the Result, methods like Map and Bind can be chained, and the passed-in delegates will only be run if the Result contains a success. You can also use LINQ Query syntax, since Result contains the necessary methods to allow Monadic Composition:
 ```csharp
@@ -69,7 +69,7 @@ var result = from s1 in Result<int, string>.Succeeded(1)
 ```
 ### Avoid dealing with null values, the Maybe Monad:
 ```csharp
-public async Maybe<Order> GetOrderById(int id)
+public Maybe<Order> GetOrderById(int id)
 {
     var order = GetOrderFromDB(id);
     return Maybe<Order>.Some(order);
@@ -82,8 +82,8 @@ Instead of having to deal with null when calling GetOrderById (or forget about i
 // What if the order was not found? Leave that to the Maybe Monad.
 
 var customerId = GetOrderById(5)
-                    .Map(order => AssingOrderToCustomer(customer, order), Maybe<Customer>.None);
-                    .GetOrElse(customer => customer.Id, 0);
+  .Map(order => AssingOrderToCustomer(customer, order));
+  .GetOrElse(customer => customer.Id, 0);
 ```
 
 ### Declarative Dispose (made into an expression):
@@ -107,9 +107,9 @@ Imperative code:
 var customer = GetCustomerById(id);
 var billModel = new BillModel 
 {
-    customerId = customer.Id,
-    customerName = customer.FullName,
-    address = customer.Address
+    CustomerId = customer.Id,
+    CustomerName = customer.FullName,
+    StreetName = customer.StreetName
     ...
 };
 ```
@@ -120,7 +120,7 @@ var billModel = GetCustomerById(id)
                   {
                       customerId = c.Id,
                       customerName = c.FullName,
-                      address = c.Address
+                      StreetName = c.StreetName
                       ...
                   });
 ```
