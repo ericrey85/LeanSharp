@@ -23,7 +23,7 @@ namespace LeanSharp
                 return await fn(result);
             }
 
-            return CreatePipeLine.With(CombineExpressions);
+            return CreatePipeline.With(CombineExpressions);
         }
 
         public Pipeline<TDestination> Select<TDestination>(Func<TSource, TDestination> fn)
@@ -34,7 +34,7 @@ namespace LeanSharp
                 return fn(result);
             }
 
-            return CreatePipeLine.With(CombineExpressions);
+            return CreatePipeline.With(CombineExpressions);
         }
 
         public Pipeline<TDestination> SelectMany<TDestination>(Func<TSource, Pipeline<TDestination>> fn)
@@ -45,7 +45,7 @@ namespace LeanSharp
                 return await fn(result).Flatten();
             }
 
-            return CreatePipeLine.With(CombineExpressions);
+            return CreatePipeline.With(CombineExpressions);
         }
 
         public Pipeline<TDestination> SelectMany<TIntermediate, TDestination>(
@@ -53,7 +53,7 @@ namespace LeanSharp
         => SelectMany(a => fn(a).Select(b => select(a, b)));
     }
 
-    public static class CreatePipeLine
+    public static class CreatePipeline
     {
         public static Pipeline<TDestination> With<TDestination>(Func<Task<TDestination>> fn)
         => new Pipeline<TDestination>(fn);

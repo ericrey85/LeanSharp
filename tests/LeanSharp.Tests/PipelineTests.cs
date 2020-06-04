@@ -10,7 +10,7 @@ namespace LeanSharp.Tests
         [Fact]
         public async Task Flatten_ReturnsATask()
         {
-            var pipeline = CreatePipeLine.With(() => 5);
+            var pipeline = CreatePipeline.With(() => 5);
             var task = pipeline.Flatten();
 
             Assert.Equal(5, await task);
@@ -21,7 +21,7 @@ namespace LeanSharp.Tests
         {
             int AddFour(int number) => number + 4;
 
-            var pipeline = CreatePipeLine.With(() => 5).Select(AddFour);
+            var pipeline = CreatePipeline.With(() => 5).Select(AddFour);
             var task = pipeline.Flatten();
 
             Assert.Equal(9, await task);
@@ -32,7 +32,7 @@ namespace LeanSharp.Tests
         {
             async Task<int> AddFour(int number) => await (number + 4).AsTask();
 
-            var pipeline = CreatePipeLine.With(() => 5).Select(AddFour);
+            var pipeline = CreatePipeline.With(() => 5).Select(AddFour);
             var task = pipeline.Flatten();
 
             Assert.Equal(9, await task);
@@ -41,9 +41,9 @@ namespace LeanSharp.Tests
         [Fact]
         public async Task SelectMany_ComposesPipeReturningMethod()
         {
-            var initialPipeline = CreatePipeLine.With(() => 5);
+            var initialPipeline = CreatePipeline.With(() => 5);
 
-            var resultingPipeline = initialPipeline.SelectMany(five => CreatePipeLine.With(() => five + 4));
+            var resultingPipeline = initialPipeline.SelectMany(five => CreatePipeline.With(() => five + 4));
 
             var task = resultingPipeline.Flatten();
 
@@ -53,9 +53,9 @@ namespace LeanSharp.Tests
         [Fact]
         public async Task SelectMany_AllowsLinqSyntacticSugarForMonadicComposition()
         {
-            var firstPipeline = CreatePipeLine.With(() => 5);
-            var secondPipeline = CreatePipeLine.With(() => 6);
-            var thirdPipeline = CreatePipeLine.With(() => 9);
+            var firstPipeline = CreatePipeline.With(() => 5);
+            var secondPipeline = CreatePipeline.With(() => 6);
+            var thirdPipeline = CreatePipeline.With(() => 9);
 
             var resultingPipeline = from firstValue in firstPipeline
                                     from secondValue in secondPipeline
@@ -70,7 +70,7 @@ namespace LeanSharp.Tests
         [Fact]
         public async Task Return_LiftsConstantAndSideEffectFreeValueIntoAPipeline()
         {
-            var pipeline = CreatePipeLine.Return(5);
+            var pipeline = CreatePipeline.Return(5);
             var task = pipeline.Flatten();
 
             Assert.Equal(5, await task);
