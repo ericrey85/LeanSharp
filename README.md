@@ -52,7 +52,7 @@ public async Task<Result<Customer, Exception>> Insert(Customer customer)
 ```
 You can take it even further and convert the try/catch statement to an expression, in which the boilerplate catch logic will be removed:
 ```csharp
-public async Task<Result<int, Exception>> Insert(Customer customer)
+public async Task<Result<Customer, Exception>> Insert(Customer customer)
 => await Try.ExpressionAsync(async () =>
 {
   // Try to asynchronously insert the Customer into the DB.
