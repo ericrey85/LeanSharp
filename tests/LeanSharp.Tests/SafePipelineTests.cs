@@ -12,15 +12,18 @@ namespace LeanSharp.Tests
         {
             async Task<Result<int, string>> GetFirstValue(int number) => await Result<int, string>.Succeeded(number + 4).AsTask();
             async Task<Result<int, string>> GetSecondValue(int number) => await Result<int, string>.Succeeded(number + 5).AsTask();
+
             async Task<int> GetThirdValue(int number) => await (number + 4).AsTask();
+
             int GetFourthValue(int number) => number + 5;
+
             SafePipeline<int, Exception> GetFithValue(int number) => CreateSafePipeline.TryWith(() => number + 6);
 
             var firstPipe = CreateSafePipeline.With(() => GetFirstValue(5));
             var secondPipe = firstPipe.Select(GetSecondValue);
             var thirdPipe = secondPipe.Select(GetThirdValue);
             var fourthPipe = secondPipe.Select(GetFourthValue);
-            var fithPipe = fourthPipe.SelectMany(value => GetFithValue(value).ToFailure(ex => ex.ToString()));
+            var fithPipe = fourthPipe.SelectMany(value => GetFithValue(value).ToStringFailure());
 
             var finalPipe = from firstValue in secondPipe
                             from secondValue in thirdPipe

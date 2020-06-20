@@ -4,10 +4,6 @@ namespace LeanSharp.Extensions
 {
     public static class TraversableExtensions
     {
-        public static Result<T, string> MapToStringFailure<T>(this Result<T, Exception> result) 
-        => result.Either(
-                r => Result<T, string>.Succeeded(r.Success),
-                e => Result<T, string>.Failed(e.Failure.Message));
         public static Pipeline<Result<TSuccess, TFailure>> ToPipeline<TSuccess, TFailure>(
             this Result<TSuccess, TFailure> result)
         => result.IsSuccess
