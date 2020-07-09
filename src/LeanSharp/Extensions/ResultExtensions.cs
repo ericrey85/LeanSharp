@@ -193,6 +193,26 @@ namespace LeanSharp.Extensions
             return result;
         }
 
+        public static Result<TSuccess, TFailure> IfElseTee<TSuccess, TFailure>(
+            this Result<TSuccess, TFailure> result,
+            Func<TSuccess, bool> predicate,
+            Action<TSuccess> doIf,
+            Action<TSuccess> doElse)
+        {
+            if (result.IsSuccess)
+            {
+                if (predicate(result.Success))
+                {
+                    doIf(result.Success);
+                }
+                else
+                {
+                    doElse(result.Success);
+                }
+            }
+            return result;
+        }
+
         public static Result<TSuccess, string> MapToStringFailure<TSuccess>(this Result<TSuccess, Exception> result)
         => result.Either(
              r => Result<TSuccess, string>.Succeeded(r.Success),
