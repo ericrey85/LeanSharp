@@ -9,18 +9,18 @@
                 ? Result<string, string[]>.Failed(new[] { failMessage })
                 : Result<string, string[]>.Succeeded(@this);
 
-        public static Result<TResult, string[]> IfNull<TResult>(
+        public static Result<TResult, TFailure> IfNull<TResult, TFailure>(
             this TResult? @this,
-            string failMessage) where TResult : struct
+            TFailure failure) where TResult : struct
             => @this.HasValue
-                ? Result<TResult, string[]>.Succeeded(@this.Value)
-                : Result<TResult, string[]>.Failed(new[] { failMessage });
+                ? Result<TResult, TFailure>.Succeeded(@this.Value)
+                : Result<TResult, TFailure>.Failed(failure);
 
-        public static Result<TResult, string[]> IfNull<TResult>(
+        public static Result<TResult, TFailure> IfNull<TResult, TFailure>(
             this TResult @this,
-            string failMessage) where TResult : class
+            TFailure failure) where TResult : class
             => @this != null
-                ? Result<TResult, string[]>.Succeeded(@this)
-                : Result<TResult, string[]>.Failed(new[] { failMessage });
+                ? Result<TResult, TFailure>.Succeeded(@this)
+                : Result<TResult, TFailure>.Failed(failure);
     }
 }

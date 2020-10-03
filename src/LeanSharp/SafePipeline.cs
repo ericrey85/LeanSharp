@@ -59,7 +59,8 @@ namespace LeanSharp
                 var result = await Expression();
 
                 return (await result.Map(value => fn(value))
-                    .MapAsync(async safePipeline => await safePipeline.Flatten())).Bind(innerResult => innerResult);
+                    .MapAsync(async safePipeline => await safePipeline.Flatten()))
+                    .Bind(innerResult => innerResult);
             }
 
             return CreateSafePipeline.With(CombineExpressions);

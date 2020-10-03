@@ -521,7 +521,7 @@ namespace LeanSharp.Tests
 
             var result = date.IfNull("The date was null.");
 
-            Assert.Equal("The date was null.", result.Failure.First());
+            Assert.Equal("The date was null.", result.Failure);
         }
 
         [Fact]
@@ -541,7 +541,7 @@ namespace LeanSharp.Tests
 
             var result = patient.IfNull("The patient was null.");
 
-            Assert.Equal("The patient was null.", result.Failure.First());
+            Assert.Equal("The patient was null.", result.Failure);
         }
     }
 }

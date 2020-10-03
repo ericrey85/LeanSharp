@@ -17,6 +17,24 @@ namespace LeanSharp.Tests
         }
 
         [Fact]
+        public void ToMaybe_LiftsValueIntoSomeIfDifferentThanNull()
+        {
+            var testObject = new object();
+            var maybeOfObject = testObject.ToMaybe();
+
+            Assert.NotEqual(Maybe<object>.None, maybeOfObject);
+        }
+
+        [Fact]
+        public void ToMaybe_LiftsValueIntoNoneIfNull()
+        {
+            object testObject = null;
+            var maybeOfObject = testObject.ToMaybe();
+
+            Assert.Equal(Maybe<object>.None, maybeOfObject);
+        }
+
+        [Fact]
         public void Match_ExecutesFirstFuncIfMaybeIsSome()
         {
             var maybeOfWord = Maybe<string>.Some("word");
