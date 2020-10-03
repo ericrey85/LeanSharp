@@ -14,8 +14,8 @@ namespace LeanSharp.Tests
             Assert.False(numbers.SafeAny());
             Assert.False(numbers.SafeAny(number => number > 1));
 
-            Assert.False(numbers.SafeCount());
-            Assert.False(numbers.SafeCount(number => number > 1));
+            Assert.Equal(0, numbers.SafeCount());
+            Assert.Equal(0, numbers.SafeCount(number => number > 1));
         }
 
         [Fact]
@@ -26,8 +26,8 @@ namespace LeanSharp.Tests
             Assert.False(numbers.SafeAny());
             Assert.False(numbers.SafeAny(number => number > 1));
 
-            Assert.False(numbers.SafeCount());
-            Assert.False(numbers.SafeCount(number => number > 1));
+            Assert.Equal(0, numbers.SafeCount());
+            Assert.Equal(0, numbers.SafeCount(number => number > 1));
         }
 
         [Fact]
@@ -38,8 +38,8 @@ namespace LeanSharp.Tests
             Assert.True(numbers.SafeAny());
             Assert.True(numbers.SafeAny(number => number > 1));
 
-            Assert.True(numbers.SafeCount());
-            Assert.True(numbers.SafeCount(number => number > 1));
+            Assert.Equal(3, numbers.SafeCount());
+            Assert.Equal(2, numbers.SafeCount(number => number > 1));
         }
     }
 }

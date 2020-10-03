@@ -10,12 +10,12 @@ namespace LeanSharp.Extensions
         => @this?.Any() == true;
 
         public static bool SafeAny<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
-        => @this.SafeAny() && @this.Any(predicate);
+        => @this?.Any(predicate) == true;
 
-        public static bool SafeCount<T>(this IEnumerable<T> @this)
-        => @this?.Count() > 0;
+        public static int SafeCount<T>(this IEnumerable<T> @this)
+        => @this?.Count() ?? 0;
 
-        public static bool SafeCount<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
-        => @this?.Count(predicate) > 0;
+        public static int SafeCount<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
+        => @this?.Count(predicate) ?? 0;
     }
 }
