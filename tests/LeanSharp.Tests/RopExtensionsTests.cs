@@ -133,6 +133,30 @@ namespace LeanSharp.Tests
         }
 
         [Fact]
+        public void ToFailureIf_ReturnsFailureIfResultIsAlreadyFailure()
+        {
+            var failure = Result<string, string[]>.Failed(new[] { "failure" });
+
+            Assert.Equal("failure", failure.ToFailureIf(x => x.StartsWith("abc")).Failure.First());
+        }
+
+        [Fact]
+        public void ToFailureIf_ReturnsFailureIfPredicateReturnsTrue()
+        {
+            var failure = Result<string, string[]>.Succeeded("abc");
+
+            Assert.True(failure.ToFailureIf(x => x.Length < 5).IsFailure);
+        }
+
+        [Fact]
+        public void ToFailureIf_ReturnsSuccessIfPredicateReturnsFalse()
+        {
+            var failure = Result<string, string[]>.Succeeded("abc");
+
+            Assert.True(failure.ToFailureIf(x => x.Length < 2).IsSuccess);
+        }
+
+        [Fact]
         public void Merge_CreatesSuccessfulResultIfAccumulatorAndNextResultsAreSuccess()
         {
             var aggregatedSuccess = Result<string[], string[]>.Succeeded(new []{ "success1" });

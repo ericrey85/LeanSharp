@@ -48,6 +48,13 @@ namespace LeanSharp.Extensions
                     b => b
                 );
 
+        public static Result<TSuccess, TFailure[]> ToFailureIf<TSuccess, TFailure>(
+            this Result<TSuccess, TFailure[]> result, Func<TSuccess, bool> predicate)
+                => result.Either(
+                    a => predicate(a.Success) ? Result<TSuccess, TFailure[]>.Failed(new TFailure[0]) : a,
+                    b => b
+                );
+
         // Put accumulator and next together.
         // If they are both successes, then put them together as a success.
         // If either/both are failures, then put them together as a failure.
