@@ -4,14 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PackageId>LeanSharp</PackageId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <Authors>Eric Rey</Authors>
     <Description>
       LeanSharp allows you to write code in a more declarative and functional way in C#. By using LeanSharp, a lot of boilerplate and imperative code can be removed from your codebase.
     </Description>
     <RepositoryUrl>https://github.com/ericrey85/LeanSharp</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageTags>FunctionalCSharp DeclarativeCSharp FunctionalProgramming</PackageTags>
+    <PackageTags>FunctionalCSharp FunctionalProgramming DeclarativeCSharp DeclarativeProgramming</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
