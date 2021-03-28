@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PackageId>LeanSharp</PackageId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
     <Authors>Eric Rey</Authors>
     <Description>
       LeanSharp allows you to write code in a more declarative and functional way in C#. By using LeanSharp, a lot of boilerplate and imperative code can be removed from your codebase.

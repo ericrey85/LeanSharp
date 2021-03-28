@@ -6,4 +6,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: ComVisible(false)]
 [assembly: Guid("3540E903-A975-4306-B37B-6600B79DD8FE")]
-[assembly: AssemblyVersion("1.1.2")]
+[assembly: AssemblyVersion("1.1.3")]

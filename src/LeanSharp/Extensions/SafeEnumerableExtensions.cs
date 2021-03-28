@@ -78,8 +78,8 @@ namespace LeanSharp.Extensions
 
         public static Maybe<T> SafeSingle<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
         {
-            var first = @this.SingleOrDefault(predicate);
-            return Maybe<T>.Some(first);
+            var single = @this.SingleOrDefault(predicate);
+            return Maybe<T>.Some(single);
         }
     }
 }
