@@ -95,6 +95,46 @@ namespace LeanSharp.Tests
             Assert.Equal(0, sum2);
         }
 
+        [Fact]
+        public void SafeFirst_ReturnsMaybeSomeWhenValueIsPresent()
+        {
+            var numbers = new List<int> { 1, 2, 3 };
+            var result = numbers.SafeFirst();
+            var secondResult = numbers.SafeFirst(n => n == 2);
+
+            Assert.Equal(result, Maybe<int>.Some(1));
+            Assert.Equal(secondResult, Maybe<int>.Some(2));
+        }
+
+        [Fact]
+        public void SafeFirst_ReturnsMaybeNoneWhenValueIsNotPresent()
+        {
+            var numbers = new List<string>();
+            var firstResult = numbers.SafeFirst();
+            var secondResult = numbers.SafeFirst(n => n == "value");
+
+            Assert.Equal(firstResult, Maybe<string>.None);
+            Assert.Equal(secondResult, Maybe<string>.None);
+        }
+
+        [Fact]
+        public void SafeSingle_ReturnsMaybeSomeWhenValueIsPresent()
+        {
+            var numbers = new List<int> { 1, 2, 3 };
+            var result = numbers.SafeSingle(n => n == 2);
+
+            Assert.Equal(result, Maybe<int>.Some(2));
+        }
+
+        [Fact]
+        public void SafeSingle_ReturnsMaybeNoneWhenValueIsNotPresent()
+        {
+            var numbers = new List<string>();
+            var result = numbers.SafeSingle(n => n == "value");
+
+            Assert.Equal(result, Maybe<string>.None);
+        }
+
         private int Add(int number1, int number2) => number1 + number2;
     }
 }

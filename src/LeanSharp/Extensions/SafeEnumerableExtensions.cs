@@ -57,5 +57,29 @@ namespace LeanSharp.Extensions
                 fn(filteredElements);
             }
         }
+
+        public static Maybe<T> SafeFirst<T>(this IEnumerable<T> @this)
+        {
+            var first = @this.FirstOrDefault();
+            return Maybe<T>.Some(first);
+        }
+
+        public static Maybe<T> SafeFirst<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
+        {
+            var first = @this.FirstOrDefault(predicate);
+            return Maybe<T>.Some(first);
+        }
+
+        public static Maybe<T> SafeSingle<T>(this IEnumerable<T> @this)
+        {
+            var first = @this.SingleOrDefault();
+            return Maybe<T>.Some(first);
+        }
+
+        public static Maybe<T> SafeSingle<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
+        {
+            var first = @this.SingleOrDefault(predicate);
+            return Maybe<T>.Some(first);
+        }
     }
 }
