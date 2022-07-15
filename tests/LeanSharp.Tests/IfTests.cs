@@ -1,5 +1,4 @@
-﻿using System;
-using LeanSharp.Tests.Extensions;
+﻿using LeanSharp.Tests.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,6 +8,11 @@ namespace LeanSharp.Tests
     {
         private ITestOutputHelper Output { get; }
 
+        private void ThenAction() => Output.WriteLine("1");
+        private void ElseAction() => Output.WriteLine("2");
+        private bool TruePredicate() => 3 == 3;
+        private bool FalsePredicate() => 3 == 2;
+
         public IfTests(ITestOutputHelper output)
         {
             Output = output;
@@ -17,11 +21,10 @@ namespace LeanSharp.Tests
         [Fact]
         public void IfTrueThen_ExecutesActionIfConditionalIsTrue()
         {
-            void Action() => Output.WriteLine("1");
-
-            If.True(() => 3 == 3)
-                .Then(Action)
-                .Then(Action);
+            If.True(TruePredicate)
+                .Then(ThenAction)
+                .Then(ThenAction)
+                .Else(ElseAction);
 
             Assert.Equal("11", Output.GetOutputAsString());
         }
@@ -29,21 +32,21 @@ namespace LeanSharp.Tests
         [Fact]
         public void IfTrueThen_DoesNotExecuteActionIfConditionalIsFalse()
         {
-            void Action() => Output.WriteLine("1");
+            If.True(FalsePredicate)
+                .Then(ThenAction)
+                .Then(ThenAction)
+                .Else(ElseAction);
 
-            If.True(() => 2 == 3).Then(Action);
-
-            Assert.NotEqual("1", Output.GetOutputAsString());
+            Assert.Equal("2", Output.GetOutputAsString());
         }
 
         [Fact]
         public void IfFalseThen_ExecutesActionIfConditionalIsFalse()
         {
-            void Action() => Output.WriteLine("1");
-
-            If.False(() => 2 == 3)
-                .Then(Action)
-                .Then(Action);
+            If.False(FalsePredicate)
+                .Then(ThenAction)
+                .Then(ThenAction)
+                .Else(ElseAction);
 
             Assert.Equal("11", Output.GetOutputAsString());
         }
@@ -51,9 +54,9 @@ namespace LeanSharp.Tests
         [Fact]
         public void IfFalseThen_DoesNotExecuteActionIfConditionalIsTrue()
         {
-            void Action() => Output.WriteLine("1");
-
-            If.False(() => 3 == 3).Then(Action);
+            If.False(TruePredicate)
+                .Then(ThenAction)
+                .Else(ElseAction);
 
             Assert.NotEqual("1", Output.GetOutputAsString());
         }
