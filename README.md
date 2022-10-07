@@ -25,7 +25,9 @@ using LeanSharp;
 ```csharp
 var success = Result<int, string>.Succeeded(2);
 var newResult = success.Map(two => two + 3); // Success(5)
-var finalResult = newResult.Bind(five => Result<int, string>.Succeeded(five + 5)); // Success(10)
+var finalResult = newResult
+                     .Bind(five => Result<int, string>
+                     .Succeeded(five + 5)); // Success(10)
 ```
 Applying chaining:
 ```csharp
